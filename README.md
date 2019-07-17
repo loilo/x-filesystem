@@ -7,6 +7,9 @@
   # eXtended Filesystem
 </div>
 
+[![Test status on Travis](https://badgen.net/travis/loilo/x-filesystem?label=tests&icon=travis)](https://travis-ci.org/loilo/x-filesystem)
+[![Version on packagist.org](https://badgen.net/packagist/v/loilo/x-filesystem)](https://packagist.org/packages/loilo/x-filesystem)
+
 An extension to Symfony's [Filesystem Component](https://symfony.com/doc/current/components/filesystem.html) with
 
 * recursive globbing support
