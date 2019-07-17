@@ -1,0 +1,2 @@
+# Remove all EditorConfig rules as fixtures often rely on exact equality
+root = true
