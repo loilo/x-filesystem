@@ -76,9 +76,11 @@ $fs->readFile('plain.txt');
 By default, HTTP(S) URLs are not allowed as filenames when reading a file. This can however be adjusted through setting the `remoteAllowed` flag:
 
 ```php
-// Make the $fs instance be able to read from HTTP(S) URLs
+// Allow the $fs instance to read from HTTP(S) URLs
 $fs->setRemoteAllowed(true);
 ```
+
+Inversely, you can check whether remote access is enabled via `$fs->isRemoteAllowed()`.
 
 ### Read JSON Files
 ### Signature
