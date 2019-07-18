@@ -59,7 +59,6 @@ $fs->glob('src/**/*.php');
  * Read the contents of a file
  *
  * @param string $filename    The file to read from
- * @param bool   $allowRemote Whether reading from remote sources should be allowed (defaults to `true`)
  * @return string The contents from the file
  *
  * @throws FileNotFoundException When the path does not exist or is not a file
@@ -73,6 +72,13 @@ function readFile($filename)
 $fs->readFile('plain.txt');
 ```
 
+### Read Files From URLs
+By default, HTTP(S) URLs are not allowed as filenames when reading a file. This can however be adjusted through setting the `remoteAllowed` flag:
+
+```php
+// Make the $fs instance be able to read from HTTP(S) URLs
+$fs->setRemoteAllowed(true);
+```
 
 ### Read JSON Files
 ### Signature
