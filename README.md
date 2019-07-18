@@ -51,7 +51,7 @@ $fs->glob('src/**/*.php');
 ```
 
 ### Read Plain Files
-Weirdly enough, `Filesystem` has no built-in way to read plain files, so here we go:
+`Filesystem` has no built-in way to read plain files, so here we go:
 
 #### Signature
 ```php
