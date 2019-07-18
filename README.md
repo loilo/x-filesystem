@@ -72,7 +72,7 @@ function readFile($filename)
 $fs->readFile('plain.txt');
 ```
 
-### Read Files From URLs
+### Read Files from URLs
 By default, HTTP(S) URLs are not allowed as filenames when reading a file. This can however be adjusted through setting the `remoteAllowed` flag:
 
 ```php
