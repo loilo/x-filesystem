@@ -169,7 +169,9 @@ $fs->dumpJsonFile('data.json', [
  * Read the contents of a file and parses them as YAML
  *
  * @param string $filename The file to read from
- * @param int    $mode     The parse mode: `PARSE_ASSOC` to return an associative array, `PARSE_OBJECT` to return a \stdClass object
+ * @param int    $mode     The parse mode:
+ *                         `PARSE_ASSOC` to return an associative array
+ *                         `PARSE_OBJECT` to return a \stdClass object
  * @return mixed The parsed YAML data
  *
  * @throws FileNotFoundException When the path does not exist or is not a file
