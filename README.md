@@ -38,8 +38,8 @@ This method matches the behavior of [PHP's built-in `glob` function](https://sec
  * Find files by a glob. As opposed to PHP's built-in "glob" function, this method supports the ** wildcard.
  * @see https://www.php.net/manual/en/function.glob.php#refsect1-function.glob-parameters
  *
- * @param string $pattern The pattern. No tilde expansion or parameter substitution is done.
- * @param integer $flags Flags to apply
+ * @param string  $pattern The pattern. No tilde expansion or parameter substitution is done.
+ * @param int     $flags   Flags to apply
  * @return array
  */
 public function glob($pattern, $flags = 0)
