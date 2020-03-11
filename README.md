@@ -7,7 +7,8 @@
   # eXtended Filesystem
 </div>
 
-[![Test status on Travis](https://badgen.net/travis/loilo/x-filesystem?label=tests&icon=travis)](https://travis-ci.org/loilo/x-filesystem)
+[![Test status on Travis](https://badgen.net/travis/loilo/x-filesystem?label=unix&icon=travis)](https://travis-ci.org/loilo/x-filesystem)
+[![Test Status on AppVeyor](https://badgen.net/appveyor/ci/loilo/Fuse?icon=appveyor&label=windows)](https://ci.appveyor.com/project/loilo/x-filesystem)
 [![Version on packagist.org](https://badgen.net/packagist/v/loilo/x-filesystem)](https://packagist.org/packages/loilo/x-filesystem)
 
 An extension to Symfony's [Filesystem Component](https://symfony.com/doc/current/components/filesystem.html) with
