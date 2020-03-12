@@ -38,6 +38,9 @@ install:
   - ps: >-
       EnablePhpExtension `
         -Name       mbstring
+  - ps: >-
+      EnablePhpExtension `
+        -Name       sockets
 
 before_test:
   - composer install
