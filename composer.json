@@ -1,7 +1,7 @@
 {
     "name": "loilo/x-filesystem",
     "type": "library",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "An extension to Symfony's Filesystem Component, able to read and write PHP/YAML/JSON/CSV files",
     "authors": [
         {
