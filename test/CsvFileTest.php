@@ -63,5 +63,23 @@ class CsvFileTest extends BaseTest
             $originalCsv,
             file_get_contents($path)
         );
+
+        // Dump with configured characters
+        $path = static::DIST . '/characters-reference.csv';
+        $this->xfs->dumpCsvFile($path, static::$familyArray, '-', 'T');
+
+        $this->assertEquals(
+            file_get_contents(static::FIXTURES . '/characters.csv'),
+            file_get_contents($path)
+        );
+
+        // Dump with configured characters (multiple each)
+        $path = static::DIST . '/characters-multi-reference.csv';
+        $this->xfs->dumpCsvFile($path, static::$familyArray, '22', '99');
+
+        $this->assertEquals(
+            file_get_contents(static::FIXTURES . '/characters-multi.csv'),
+            file_get_contents($path)
+        );
     }
 }

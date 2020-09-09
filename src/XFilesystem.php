@@ -452,6 +452,53 @@ class XFilesystem extends Filesystem
     }
 
     /**
+     * Alternative implementation of fputcsv() to support delimiters/enclosures
+     * longer than one character.
+     *
+     * @param resource $handle   The file pointer must be valid, and must point to a file successfully opened by fopen() or fsockopen() (and not yet closed by fclose()).
+     * @param array $fields      An array of strings.
+     * @param string $delimiter  The optional delimiter parameter sets the field delimiter (one character only).
+     * @param string $enclosure  The optional enclosure parameter sets the field enclosure (one character only).
+     * @param string $escape_char The optional escape_char parameter sets the escape character (at most one character). An empty string ("") disables the proprietary escape mechanism.
+     * @return int|false
+     */
+    private function fputcsv(
+        $handle,
+        array $fields,
+        string $delimiter = ',',
+        string $enclosure = '"',
+        string $escape_char = '\\'
+    ) {
+        $delimiterEsc = preg_quote($delimiter, '/');
+        $enclosureEsc = preg_quote($enclosure, '/');
+
+        $enclosedChars = [$enclosure];
+        if (strlen($escape_char) === 1) {
+            $enclosedChars[] = $escape_char;
+        }
+
+        $output = [];
+        foreach ($fields as $field) {
+            $output[] = preg_match(
+                "/(?:${delimiterEsc}|${enclosureEsc}|\\s)/",
+                $field
+            )
+                ? $enclosure .
+                    str_replace(
+                        $enclosedChars,
+                        array_map(function ($enclosedChar) use ($enclosure) {
+                            return $enclosure . $enclosedChar;
+                        }, $enclosedChars),
+                        $field
+                    ) .
+                    $enclosure
+                : $field;
+        }
+
+        return fwrite($handle, join($delimiter, $output) . "\n");
+    }
+
+    /**
      * Writes a line of CSV data to a resource
      *
      * @param resource $handle     The resource to write to
@@ -472,9 +519,25 @@ class XFilesystem extends Filesystem
         string $enclosure,
         string $escapeChar
     ) {
-        if (fputcsv($handle, $lineData, $delimiter, $enclosure, $escapeChar) ===
-            false
-        ) {
+        if (strlen($delimiter) > 1 || strlen($enclosure) > 1) {
+            $result = $this->fputcsv(
+                $handle,
+                $lineData,
+                $delimiter,
+                $enclosure,
+                $escapeChar
+            );
+        } else {
+            $result = fputcsv(
+                $handle,
+                $lineData,
+                $delimiter,
+                $enclosure,
+                $escapeChar
+            );
+        }
+
+        if ($result === false) {
             // Negative line number = error is in keys of the structured data
             if ($lineNo === -1) {
                 throw new InvalidArgumentException('Invalid data in headline');
