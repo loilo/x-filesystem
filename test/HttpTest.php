@@ -10,7 +10,7 @@ class HttpTest extends BaseTest
     protected static $serverUrl;
     protected static $serverProcess;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Get free port
         $sock = socket_create_listen(0);
@@ -38,7 +38,7 @@ class HttpTest extends BaseTest
 
             $reporting = error_reporting();
             error_reporting(E_ERROR);
-            $result = get_headers(static::$serverUrl, 1);
+            $result = get_headers(static::$serverUrl);
             error_reporting($reporting);
 
             if (is_array($result)) {
@@ -51,9 +51,9 @@ class HttpTest extends BaseTest
         static::fail('Could not set up test server');
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
-        static::$serverProcess->stop(3, SIGINT);
+        static::$serverProcess->stop(3, defined('SIGINT') ? SIGINT : null);
     }
 
     public function testUnallowedRead()

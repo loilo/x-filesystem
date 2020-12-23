@@ -23,7 +23,7 @@ trait FamilyTrait
      */
     protected static $familyObject;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$familyArray = array_merge(
             [ array_keys(static::$familyAssoc[0]) ],

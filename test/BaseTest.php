@@ -21,7 +21,7 @@ abstract class BaseTest extends TestCase
      */
     protected $xfs;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem();
         $this->xfs = new XFilesystem();
@@ -29,7 +29,7 @@ abstract class BaseTest extends TestCase
         $this->fs->mkdir(static::DIST);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove(static::DIST);
     }
