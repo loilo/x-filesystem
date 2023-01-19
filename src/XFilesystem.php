@@ -160,7 +160,7 @@ class XFilesystem extends Filesystem
             if ($isCached) {
                 opcache_invalidate(
                     $filename,
-                    $caching === static::PHP_FORCE_UNCACHED
+                    $caching === static::PHP_FORCE_INVALIDATE_CACHE
                 );
             }
 
