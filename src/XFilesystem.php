@@ -27,27 +27,22 @@ class XFilesystem extends Filesystem
     const PARSE_ASSOC = 1;
     const PARSE_OBJECT = 2;
 
-    /**
-     * @var bool
-     */
-    protected $remoteAllowed = false;
+    protected bool $remoteAllowed = false;
 
     /**
      * Sets the remoteAllowed flag.
      *
      * @param bool $remoteAllowed Whether to allow reading from HTTP(S) URLs or not
      */
-    public function setRemoteAllowed(bool $remoteAllowed)
+    public function setRemoteAllowed(bool $remoteAllowed): void
     {
         $this->remoteAllowed = $remoteAllowed;
     }
 
     /**
      * Tell whether reading from HTTP(S) sources is allowed
-     *
-     * @return bool
      */
-    public function isRemoteAllowed()
+    public function isRemoteAllowed(): bool
     {
         return $this->remoteAllowed;
     }
@@ -60,7 +55,7 @@ class XFilesystem extends Filesystem
      * @throws FileNotFoundException When the path does not exist or is not a file
      * @throws IOException           When the file exists but is not readable
      */
-    protected function enforceFileAccessibility(string $filename)
+    protected function enforceFileAccessibility(string $filename): void
     {
         if (!file_exists($filename)) {
             throw new FileNotFoundException(
@@ -91,8 +86,7 @@ class XFilesystem extends Filesystem
     /**
      * Read the contents of a file
      *
-     * @param string $filename    The file to read from
-     * @param bool   $allowRemote Whether reading from remote sources should be allowed
+     * @param string $filename The file to read from
      * @return string The contents from the file
      *
      * @throws FileNotFoundException When the path does not exist or is not a file
@@ -107,7 +101,7 @@ class XFilesystem extends Filesystem
         }
 
         if (!$isRemote) {
-            $this->enforceFileAccessibility($filename);
+            $this->enforceFileAccessibility(filename: $filename);
             $result = file_get_contents($filename);
         } else {
             $result = file_get_contents($filename, false, stream_context_create([
@@ -136,12 +130,12 @@ class XFilesystem extends Filesystem
      * Read and return the contents of a PHP file.
      * Since this utilizes `include` and does not have any safety nets against remote code execution, only ever use it on trustworthy sources!
      *
-     * @param string $filename The PHP file to include
-     * @param int    $caching  The caching behaviour:
-     *                         `PHP_ALLOW_CACHED` will evaluate the file only once
-     *                         `PHP_INVALIDATE_CACHE` will re-evaluate it if it changed
-     *                         `PHP_FORCE_INVALIDATE_CACHE` will re-evaluate it anyway
-     *                          Note that only OPCache is utilized which usually is turned off in PHP CLI
+     * @param $filename  The PHP file to include
+     * @param $caching   The caching behaviour:
+     *                   `PHP_ALLOW_CACHED` will evaluate the file only once
+     *                   `PHP_INVALIDATE_CACHE` will re-evaluate it if it changed
+     *                   `PHP_FORCE_INVALIDATE_CACHE` will re-evaluate it anyway
+     *                   Note that only OPCache is utilized which usually is turned off in PHP CLI
      * @return mixed The data returned from the file
      *
      * @throws FileNotFoundException When the path does not exist or is not a file
@@ -150,7 +144,7 @@ class XFilesystem extends Filesystem
     public function readPhpFile(
         string $filename,
         int $caching = self::PHP_ALLOW_CACHED
-    ) {
+    ): mixed {
         $isCached = function_exists('opcache_is_script_cached')
             ? opcache_is_script_cached($filename)
             : false;
@@ -164,11 +158,11 @@ class XFilesystem extends Filesystem
                 );
             }
 
-            $this->enforceFileAccessibility($filename);
+            $this->enforceFileAccessibility(filename: $filename);
 
             // Enforce file accessibility only if not cached
         } elseif (!$isCached) {
-            $this->enforceFileAccessibility($filename);
+            $this->enforceFileAccessibility(filename: $filename);
         }
 
         return include $filename;
@@ -182,9 +176,9 @@ class XFilesystem extends Filesystem
      *
      * @throws IOException When the file cannot be written to
      */
-    public function dumpPhpFile(string $filename, $data)
+    public function dumpPhpFile(string $filename, mixed $data): void
     {
-        return $this->dumpFile(
+        $this->dumpFile(
             $filename,
             sprintf("<?php return %s;\n", var_export($data, true))
         );
@@ -245,9 +239,9 @@ class XFilesystem extends Filesystem
      */
     public function dumpJsonFile(
         string $filename,
-        $data,
+        mixed $data,
         int $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-    ) {
+    ): void {
         $encodedData = @json_encode($data, $flags);
 
         if (json_last_error() !== 0) {
@@ -257,7 +251,7 @@ class XFilesystem extends Filesystem
             );
         }
 
-        return $this->dumpFile($filename, $encodedData);
+        $this->dumpFile($filename, $encodedData);
     }
 
     /**
@@ -276,7 +270,7 @@ class XFilesystem extends Filesystem
     public function readYamlFile(
         string $filename,
         int $mode = self::PARSE_OBJECT
-    ) {
+    ): mixed {
         // Check $mode flag
         if ($mode !== static::PARSE_ASSOC && $mode !== static::PARSE_OBJECT) {
             throw new InvalidArgumentException(
@@ -307,11 +301,11 @@ class XFilesystem extends Filesystem
      */
     public function dumpYamlFile(
         string $filename,
-        $data,
+        mixed $data,
         int $inline = 2,
         int $indent = 4
-    ) {
-        return $this->dumpFile(
+    ): void {
+        $this->dumpFile(
             $filename,
             Yaml::dump($data, $inline, $indent, Yaml::DUMP_OBJECT_AS_MAP)
         );
@@ -339,7 +333,7 @@ class XFilesystem extends Filesystem
         string $delimiter,
         string $enclosure,
         string $escapeChar
-    ) {
+    ): array {
         $row = trim($row);
         $fields = str_getcsv($row, $delimiter, $enclosure, $escapeChar);
 
@@ -387,7 +381,7 @@ class XFilesystem extends Filesystem
         string $charset = 'UTF-8',
         string $enclosure = '"',
         string $escapeChar = '\\'
-    ) {
+    ): mixed {
         // Check $mode flag
         if ($mode !== static::PARSE_ARRAY &&
             $mode !== static::PARSE_ASSOC &&
@@ -468,7 +462,7 @@ class XFilesystem extends Filesystem
         string $delimiter = ',',
         string $enclosure = '"',
         string $escape_char = '\\'
-    ) {
+    ): int|bool {
         $delimiterEsc = preg_quote($delimiter, '/');
         $enclosureEsc = preg_quote($enclosure, '/');
 
@@ -480,7 +474,7 @@ class XFilesystem extends Filesystem
         $output = [];
         foreach ($fields as $field) {
             $output[] = preg_match(
-                "/(?:${delimiterEsc}|${enclosureEsc}|\\s)/",
+                "/(?:{$delimiterEsc}|{$enclosureEsc}|\\s)/",
                 $field
             )
                 ? $enclosure .
@@ -518,7 +512,7 @@ class XFilesystem extends Filesystem
         string $delimiter,
         string $enclosure,
         string $escapeChar
-    ) {
+    ): void {
         if (strlen($delimiter) > 1 || strlen($enclosure) > 1) {
             $result = $this->fputcsv(
                 $handle,
@@ -568,7 +562,7 @@ class XFilesystem extends Filesystem
         string $enclosure = '"',
         string $escapeChar = '\\',
         int $dumpMode = self::CSV_DUMP_DETECT
-    ) {
+    ): void {
         // Detect dump mode from first data item
         if ($dumpMode === static::CSV_DUMP_DETECT) {
             if (empty($data)) {
@@ -653,7 +647,7 @@ class XFilesystem extends Filesystem
         }
         rewind($csv);
 
-        return $this->dumpFile($filename, rtrim(stream_get_contents($csv)));
+        $this->dumpFile($filename, rtrim(stream_get_contents($csv)));
     }
 
     /**

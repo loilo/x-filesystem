@@ -13,7 +13,7 @@ class HttpTest extends BaseTest
     public static function setUpBeforeClass(): void
     {
         // Get free port
-        $sock = socket_create_listen(0);
+        $sock = socket_create_listen(port: 0);
         socket_getsockname($sock, $addr, $port);
         socket_close($sock);
 
@@ -21,11 +21,9 @@ class HttpTest extends BaseTest
         $origin = '127.0.0.1:' . $port;
         static::$serverUrl = 'http://' . $origin;
         static::$serverProcess = new Process(
-            'php -S ' . $origin,
-            static::FIXTURES . '/server',
-            null,
-            null,
-            0
+            command: ['php', '-S', $origin],
+            cwd: static::FIXTURES . '/server',
+            timeout: 0
         );
         static::$serverProcess->start();
 
