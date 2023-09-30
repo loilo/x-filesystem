@@ -40,8 +40,17 @@ class PlainFileTest extends BaseTest
             return;
         }
 
+        $non_existing_file_path = static::FIXTURES . '/non-existing.txt';
+        $dead_link_path = static::FIXTURES . '/dead-link.txt';
+
+        touch($non_existing_file_path);
+        symlink($non_existing_file_path, $dead_link_path);
+        unlink($non_existing_file_path);
+
         $this->expectException(FileNotFoundException::class);
-        $this->xfs->readFile(static::FIXTURES . '/dead-link.txt');
+        $this->xfs->readFile($dead_link_path);
+
+        unlink($dead_link_path);
     }
 
     public function testNonExistingRead()
