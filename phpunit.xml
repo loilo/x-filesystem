@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="vendor/autoload.php" displayDetailsOnTestsThatTriggerWarnings="true" colors="true">
+    <testsuites>
+        <testsuite name="X-Filesystem Test Suite">
+            <directory>test</directory>
+            <exclude>test/BaseTest.php</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>

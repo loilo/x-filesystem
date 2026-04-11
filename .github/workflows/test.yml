@@ -32,5 +32,5 @@ jobs:
           tools: composer
           extensions: sockets
       - run: composer install
-      - run: vendor/bin/phpunit --bootstrap vendor/autoload.php test
+      - run: vendor/bin/phpunit
       - run: vendor/bin/phpcs --standard=psr2 --ignore=Fixtures src test -n
