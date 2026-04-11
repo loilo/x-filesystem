@@ -108,3 +108,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 test/Fixtures/non-existing.txt
+
+.phpunit.result.cache
