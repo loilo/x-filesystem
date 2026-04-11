@@ -48,9 +48,11 @@ class PlainFileTest extends BaseTest
         unlink($non_existing_file_path);
 
         $this->expectException(FileNotFoundException::class);
-        $this->xfs->readFile($dead_link_path);
-
-        unlink($dead_link_path);
+        try {
+            $this->xfs->readFile($dead_link_path);
+        } finally {
+            unlink($dead_link_path);
+        }
     }
 
     public function testNonExistingRead()
